@@ -1,0 +1,148 @@
+\documentclass{article}
+\usepackage{url}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+%\usepackage{hyperref}
+
+\begin{document}
+
+\title{Derivation of gradients for the RNTN}
+\author{Hjalmar K. Turesson}
+\maketitle
+
+\section*{Notation}
+	\begin{itemize}
+		\item$d$   -- Length of word vector
+		\item$n$   -- Node/layer
+		\item$x$   -- Activation/output of neuron ($x \in \mathbb{R}^{d}$; $\tanh z$
+		\item$z$   -- Input to neuron ($z \in \mathbb{R}^{d}$; $z = Wx$)
+		\item$t$   -- Target vector ($t \in \mathbb{R}^5$; 0-1 coded)
+		\item$y$   -- Prediction ($y \in \mathbb{R}^5$; output of softmax layer -- $softmax(z)$)
+		\item$W_s$ -- Classification matrix ($W_s \in \mathbb{R}^{5 \times d}$)
+		\item$W$ -- Weight matrix ($W \in \mathbb{R}^{d \times 2d}$)
+		\item$V$   -- Weight tensor ($V^{1:d} \in \mathbb{R}^{2d \times 2d \times d} $)
+		\item$L$ -- Word embedding matrix ($L \in \mathbb{R}^{d \times |V|}$, $|V|$ is the size of the vocabulary)
+		\item$\theta$ -- All weight parameters ($\theta = (W_s, W, V, L)$)
+		\item$E$ -- The cost as a function of $\theta$
+		\item$\delta_l$ -- Error going to the left child node ($\delta_r$ error to the right child node)
+	\end{itemize}
+
+\section*{Softmax}
+\begin{equation}
+y_{i} = \frac{e^{z_i}}{\sum\limits_{j}e^{z_j}}
+\end{equation}
+	\begin{equation}
+		\frac{\partial y_i}{\partial z_j} = y_{i}(\delta_{ij} - y_{j})
+	\end{equation}
+	$\delta_{ij}$ is the Kronecker's delta:
+	$ \delta_{ij} = \begin{cases}
+	0 &\text{if } i \neq j,   \\
+	1 &\text{if } i=j.   \end{cases} $
+
+\section*{Cost function $E$}
+	\begin{equation}
+		E(\theta) = - \sum\limits_{i}\sum\limits_{j}{t_{j}^{i} \log{y_{j}^{i}} + \lambda||\theta||^2}
+	\end{equation}
+	\begin{equation}
+		\frac{\partial E}{\partial y_j} = \frac{t_j}{y_j}
+	\end{equation}
+
+\section*{Activation function}
+	\begin{equation}
+		x_i = \tanh{z_i}
+	\end{equation}
+	\begin{equation}
+		\frac{\partial x_i}{\partial z_i} = 1 - \tanh^2{z_i}
+	\end{equation}
+
+\section*{Derivative of $E$ with respect to the sentiment classification matrix $W_s$}
+
+	\begin{equation}
+		\frac{\partial E}{\partial W_s} = 
+		\sum\limits_{k}\frac{\partial E}{\partial y_k}{\frac{\partial y_k}{\partial z^{s}}}{\frac{\partial z^{s}}{\partial W_{s}}}
+	\end{equation}
+	\subsubsection*{Derivative of cost function:}
+		\begin{equation}
+			\frac{\partial E}{\partial y} = \frac{t}{y}
+		\end{equation}
+	\subsubsection*{Derivative of \emph{softmax} function:}
+		\begin{equation}
+			\frac{\partial y_k}{\partial z^{s}_{i}} = y_{i}(\delta_{ik} - y_{k})
+		\end{equation}
+	\subsubsection*{Derivative of input:}
+		\begin{equation}
+			\frac{\partial z^{s}}{\partial W_s} = x
+		\end{equation}
+	\subsubsection*{Combined:}
+		\begin{equation}
+			\begin{split}
+				\frac{\partial E}{\partial W_s}
+				= \sum\limits_{k}\frac{t_k}{y_k}y_{k}(\delta_{ik} - y_{i})x_j \\
+			  = x_j \sum\limits_{k}{t_k (\delta_{ik}-y_i)} \\
+			  = x_j(y_i - t_i)
+			\end{split}
+		\end{equation}
+\section*{Derivative of $E$ with respect to the weight matrix $W$}
+	\subsubsection*{For one training sentence:}
+	\begin{equation}
+		\frac{\partial E}{\partial W} = 
+		\sum\limits_{k}\frac{\partial E}{\partial y_k}
+		\frac{\partial y_k}{\partial z_{s}}
+		\frac{\partial z_{s}}{\partial x}
+		\frac{\partial x}{\partial z}
+		\frac{\partial z}{\partial W}
+	\end{equation}
+	\subsubsection*{Derivative of input to $node_n$ w.r.t. activation of $node_{n-1}$:}
+	\begin{equation}
+		\frac{\partial z}{\partial x} = W
+	\end{equation}
+	\subsubsection*{Derivative of a node's activation w.r.t. its input:}
+	\begin{equation}
+		\begin{split}
+			\frac{\partial x}{\partial z} = 1 - \tanh^2z \\
+			f'(x) = 1 - x^2 \\
+			f' \bigg( \bigg[ \begin{array}{c} x^l \\ x^r \end{array} \bigg] \bigg) = 
+			1 - \bigg[ \begin{array}{c} x^l \\ x^r \end{array} \bigg] \otimes \bigg[ \begin{array}{c} x^l \\ x^r \end{array} \bigg]
+		\end{split}
+	\end{equation}
+	\subsubsection*{Derivative of a node's input w.r.t. its weight matrix $W$:}
+	\begin{equation}
+		\frac{\partial z}{\partial W} = x
+	\end{equation}
+	\subsubsection*{Combined:}
+	\begin{equation}
+		\begin{split}
+			\delta^s = W_s{^T}(y - t) \otimes f'(x_n) \\
+			\frac{\partial E}{\partial W} = W^T \delta^s
+			\otimes f' \bigg( \bigg[ \begin{array}{c} x_{n-1}^l \\ x_{n-1}^r \end{array} \bigg] \bigg) \bigg[  \begin{array}{c} x_{n-1}^l \\ x^{r}{_{n-1}} \end{array} \bigg]^T\\
+		\end{split}
+	\end{equation}
+
+\section*{Derivative of $E$ with respect to slice $k$ of the tensor layer $V^{[k]}$}
+
+	\subsubsection*{Top node ($node_n$):}
+		\begin{equation}
+			\begin{split}
+				\delta^s = W_s{^T}(y - t) \otimes (1 - x{_n}^2) \\
+				\frac{\partial E_n}{\partial V^{[k]}} = 
+				\delta^s{_k} \bigg[ \begin{array}{c} x^l{_{n-1}} \\ x^r{_{n-1}} \end{array} \bigg]	
+				\bigg[  \begin{array}{c} x_{n-1}^l \\ x^{r}{_{n-1}} \end{array} \bigg]^T \\
+			\end{split}
+		\end{equation}
+	\subsubsection*{Left child node ($node_{n-1}$):}
+		\begin{equation}
+			\begin{split}
+				\delta_{n} = \delta^{s,n} \\
+				\delta^{n-1}_{k} = \big( W^T \delta^n + S \big) 
+				\otimes f' \bigg( \bigg[ \begin{array}{c} x^l_{n-1}\\ x^r_{n-1} \end{array} \bigg] \bigg) \\
+				S = \sum\limits_{k = 1}^d \delta^n \bigg( V^{[k]} + \big(V^{[k]})^T \bigg) \bigg[ \begin{array}{c} x^l_{n-1}\\ x^r_{n-1} \end{array} \bigg] \\
+				\delta^{n-1}_l = \delta_l^{s,n-1} + \delta^{n-1}[1:d] \\
+				\frac{\partial E_{n-1}}{\partial V^{[k]}} = 
+				\frac{\partial E_n}{\partial V^{[k]}} + \delta^{n-1}_l \bigg[  \begin{array}{c} x_{n-2}^l \\ x^{r}{_{n-2}} \end{array} \bigg]^T
+			\end{split}
+		\end{equation}
+\end{document}
+
+
+
