@@ -10,10 +10,10 @@ An implementation of the Recursive Neural Tensor Network (RNTN) described by Soc
 
  * $d$   - Length of word vector
  * $n$   - Node/layer
- * $x$   - Activation/output of neuron ( $x \in \mathbb{R}^{d}$; $\tanh z$ )
- * $z$   - Input to neuron ( $z \in \mathbb{R}^{d}$; $z = Wx$ )
- * $t$   - Target vector ($t \in \mathbb{R}^5$; 0-1 coded)
- * $y$   - Prediction ($y \in \mathbb{R}^5$; output of softmax layer - $softmax(z)$)
+ * $x$   - Activation/output of neuron $(x \in \mathbb{R}^{d}$; $\tanh z)$
+ * $z$   - Input to neuron $(z \in \mathbb{R}^{d}$; $z = Wx)$
+ * $t$   - Target vector $(t \in \mathbb{R}^5$; 0-1 coded)
+ * $y$   - Prediction $(y \in \mathbb{R}^5$; output of softmax layer - $softmax(z))$
  * $W_s$ - Classification matrix ($W_s \in \mathbb{R}^{5 \times d}$)
  * $W$ - Weight matrix ($W \in \mathbb{R}^{d \times 2d}$)
  * $V$ - Weight tensor ($V^{1:d} \in \mathbb{R}^{2d \times 2d \times d} $)
