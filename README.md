@@ -27,14 +27,13 @@ $$y_{i} = \frac{e^{z_i}}{\sum\limits_{j}e^{z_j}}$$
 
 $$\frac{\partial y_i}{\partial z_j} = y_{i}(\delta_{ij} - y_{j})$$
 
-$\delta_{ij}$ is the Kronecker's delta: $\delta_{ij} = \begin{cases} 0 &\text{if } i \neq j, \\ 1 &\text{if } i=j. \end{cases} $
-
+$\delta_{ij}$ is the Kronecker's delta: 
 $$
-  \delta_{ij} =
-    \begin{cases}
-            1, &         \text{if } i=j,\\
-            0, &         \text{if } i\neq j.
-    \end{cases}
+\delta_{ij} = 
+  \begin{cases} 
+    0 &\text{if } i \neq j, \\ 
+    1 &\text{if } i=j. 
+  \end{cases}
 $$
 
   
