@@ -45,7 +45,7 @@ $$
 		\frac{\partial E}{\partial y_j} = \frac{t_j}{y_j}
 $$
 
-## Activation function
+### Activation function
 
 $$
 		x_i = \tanh{z_i}
@@ -54,14 +54,14 @@ $$
 		\frac{\partial x_i}{\partial z_i} = 1 - \tanh^2{z_i}
 $$
 
-### Derivative of $E$ with respect to the sentiment classification matrix $W_s$
+### Derivative of $E$ w.r.t. the sentiment classification matrix $W_s$
 
 $$
 		\frac{\partial E}{\partial W_s} = 
 		\sum\limits_{k}\frac{\partial E}{\partial y_k}{\frac{\partial y_k}{\partial z^{s}}}{\frac{\partial z^{s}}{\partial W_{s}}}
 $$
 
-#### Derivative of cost function:
+#### Derivative of the cost function:
 $$
 			\frac{\partial E}{\partial y} = \frac{t}{y}
 $$
@@ -69,7 +69,7 @@ $$
 $$
 			\frac{\partial y_k}{\partial z^{s}_{i}} = y_{i}(\delta_{ik} - y_{k})
 $$
-#### Derivative of input:
+#### Derivative of the input:
 $$
 			\frac{\partial z^{s}}{\partial W_s} = x
 $$
@@ -82,7 +82,7 @@ $$
 			  = x_j(y_i - t_i)
 			\end{split}
 $$
-### Derivative of $E$ with respect to the weight matrix $W$
+### Derivative of $E$ w.r.t. the weight matrix $W$
 #### For one training sentence:
 $$
 		\frac{\partial E}{\partial W} = 
@@ -118,7 +118,7 @@ $$
 		\end{split}
 $$
 
-### Derivative of $E$ with respect to slice $k$ of the tensor layer $V^{[k]}$
+### Derivative of $E$ w.r.t. the slice $k$ of the tensor layer $V^{[k]}$
 
 #### Top node $(node_n)$:
 $$
