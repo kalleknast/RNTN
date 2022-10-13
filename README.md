@@ -28,6 +28,7 @@ $$y_{i} = \frac{e^{z_i}}{\sum\limits_{j}e^{z_j}}$$
 $$\frac{\partial y_i}{\partial z_j} = y_{i}(\delta_{ij} - y_{j})$$
 
 $\delta_{ij}$ is the Kronecker's delta: 
+
 $$
 \delta_{ij} = 
   \begin{cases} 
