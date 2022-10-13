@@ -37,5 +37,109 @@ $$
   \end{cases}
 $$
 
+### Cost function $E$
+$$
+		E(\theta) = - \sum\limits_{i}\sum\limits_{j}{t_{j}^{i} \log{y_{j}^{i}} + \lambda||\theta||^2}
+$$
+$$
+		\frac{\partial E}{\partial y_j} = \frac{t_j}{y_j}
+$$
+
+## Activation function
+
+$$
+		x_i = \tanh{z_i}
+$$
+$$
+		\frac{\partial x_i}{\partial z_i} = 1 - \tanh^2{z_i}
+$$
+
+### Derivative of $E$ with respect to the sentiment classification matrix $W_s$
+
+$$
+		\frac{\partial E}{\partial W_s} = 
+		\sum\limits_{k}\frac{\partial E}{\partial y_k}{\frac{\partial y_k}{\partial z^{s}}}{\frac{\partial z^{s}}{\partial W_{s}}}
+$$
+
+#### Derivative of cost function:
+$$
+			\frac{\partial E}{\partial y} = \frac{t}{y}
+$$
+#### Derivative of \emph{softmax} function:
+$$
+			\frac{\partial y_k}{\partial z^{s}_{i}} = y_{i}(\delta_{ik} - y_{k})
+$$
+#### Derivative of input:
+$$
+			\frac{\partial z^{s}}{\partial W_s} = x
+$$
+#### Combined:
+$$
+			\begin{split}
+				\frac{\partial E}{\partial W_s}
+				= \sum\limits_{k}\frac{t_k}{y_k}y_{k}(\delta_{ik} - y_{i})x_j \\
+			  = x_j \sum\limits_{k}{t_k (\delta_{ik}-y_i)} \\
+			  = x_j(y_i - t_i)
+			\end{split}
+$$
+### Derivative of $E$ with respect to the weight matrix $W$
+#### For one training sentence:
+$$
+		\frac{\partial E}{\partial W} = 
+		\sum\limits_{k}\frac{\partial E}{\partial y_k}
+		\frac{\partial y_k}{\partial z_{s}}
+		\frac{\partial z_{s}}{\partial x}
+		\frac{\partial x}{\partial z}
+		\frac{\partial z}{\partial W}
+$$
+#### Derivative of input to $node_n$ w.r.t. activation of $node_{n-1}$:
+$$
+		\frac{\partial z}{\partial x} = W
+$$
+#### Derivative of a node's activation w.r.t. its input:
+$$
+		\begin{split}
+			\frac{\partial x}{\partial z} = 1 - \tanh^2z \\
+			f'(x) = 1 - x^2 \\
+			f' \bigg( \bigg[ \begin{array}{c} x^l \\ x^r \end{array} \bigg] \bigg) = 
+			1 - \bigg[ \begin{array}{c} x^l \\ x^r \end{array} \bigg] \otimes \bigg[ \begin{array}{c} x^l \\ x^r \end{array} \bigg]
+		\end{split}
+$$
+#### Derivative of a node's input w.r.t. its weight matrix $W$:
+$$
+		\frac{\partial z}{\partial W} = x
+$$
+#### Combined:
+$$
+		\begin{split}
+			\delta^s = W_s{^T}(y - t) \otimes f'(x_n) \\
+			\frac{\partial E}{\partial W} = W^T \delta^s
+			\otimes f' \bigg( \bigg[ \begin{array}{c} x_{n-1}^l \\ x_{n-1}^r \end{array} \bigg] \bigg) \bigg[  \begin{array}{c} x_{n-1}^l \\ x^{r}{_{n-1}} \end{array} \bigg]^T\\
+		\end{split}
+$$
+
+### Derivative of $E$ with respect to slice $k$ of the tensor layer $V^{[k]}$
+
+#### Top node ($node_n$):
+$$
+			\begin{split}
+				\delta^s = W_s{^T}(y - t) \otimes (1 - x{_n}^2) \\
+				\frac{\partial E_n}{\partial V^{[k]}} = 
+				\delta^s{_k} \bigg[ \begin{array}{c} x^l{_{n-1}} \\ x^r{_{n-1}} \end{array} \bigg]	
+				\bigg[  \begin{array}{c} x_{n-1}^l \\ x^{r}{_{n-1}} \end{array} \bigg]^T \\
+			\end{split}
+$$
+#### Left child node ($node_{n-1}$):}
+$$
+			\begin{split}
+				\delta_{n} = \delta^{s,n} \\
+				\delta^{n-1}_{k} = \big( W^T \delta^n + S \big) 
+				\otimes f' \bigg( \bigg[ \begin{array}{c} x^l_{n-1}\\ x^r_{n-1} \end{array} \bigg] \bigg) \\
+				S = \sum\limits_{k = 1}^d \delta^n \bigg( V^{[k]} + \big(V^{[k]})^T \bigg) \bigg[ \begin{array}{c} x^l_{n-1}\\ x^r_{n-1} \end{array} \bigg] \\
+				\delta^{n-1}_l = \delta_l^{s,n-1} + \delta^{n-1}[1:d] \\
+				\frac{\partial E_{n-1}}{\partial V^{[k]}} = 
+				\frac{\partial E_n}{\partial V^{[k]}} + \delta^{n-1}_l \bigg[  \begin{array}{c} x_{n-2}^l \\ x^{r}{_{n-2}} \end{array} \bigg]^T
+			\end{split}
+$$
   
 * Reference: R. Socher, A. Perelygin, J.Y. Wu, J. Chuang, C.D. Manning, A.Y. Ng and C. Potts. 2013. Recursive Deep Models for Semantic Compositionality Over a Sentiment Treebank. In EMNLP.
