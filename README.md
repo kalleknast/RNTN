@@ -1,9 +1,10 @@
 # RNTN
-An implementation of the Recursive Neural Tensor Network (RNTN) described by Socher et al (2013) in "Recursive Deep Models for Semantic Compositionality Over a Sentiment Treebank"
+The Recursive Neural Tensor Network (RNTN) was state of the art for sentiment analysis in 2013. 
 
-* What it does: ...
-* How to run/install: ...
-* Where to get the dataset.
+This is an old (from 2015) GPU-implementation of RNTN described by Socher et al (2013) in [Recursive Deep Models for Semantic Compositionality Over a Sentiment Treebank](https://nlp.stanford.edu/~socherr/EMNLP2013_RNTN.pdf).
+
+The model is trained using the [Stanford Sentiment Treebank](https://nlp.stanford.edu/sentiment/). Download extract extract `train.txt` and `vocabulary.txt` to `./data/`. `RNTN.py` loads and trains the model.
+
 ## Gradient derivations
 
 ### Notation
@@ -142,4 +143,4 @@ $$
 			\end{split}
 $$
   
-* Reference: R. Socher, A. Perelygin, J.Y. Wu, J. Chuang, C.D. Manning, A.Y. Ng and C. Potts. 2013. Recursive Deep Models for Semantic Compositionality Over a Sentiment Treebank. In EMNLP.
+**Reference**: R. Socher, A. Perelygin, J.Y. Wu, J. Chuang, C.D. Manning, A.Y. Ng and C. Potts. 2013. Recursive Deep Models for Semantic Compositionality Over a Sentiment Treebank. In EMNLP.
