@@ -5,6 +5,9 @@ This is an old (from 2015) GPU-implementation of RNTN described by Socher et al 
 
 The model is trained using the [Stanford Sentiment Treebank](https://nlp.stanford.edu/sentiment/). Download extract extract `train.txt` and `vocabulary.txt` to `./data/`. `RNTN.py` loads and trains the model.
 
+## Installation
+The only dependencies are [PyCuda](https://documen.tician.de/pycuda/) and NumPy.
+
 ## Gradient derivations
 
 ### Notation
