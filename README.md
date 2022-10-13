@@ -65,7 +65,7 @@ $$
 $$
 			\frac{\partial E}{\partial y} = \frac{t}{y}
 $$
-#### Derivative of \emph{softmax} function:
+#### Derivative of the $softmax$ function:
 $$
 			\frac{\partial y_k}{\partial z^{s}_{i}} = y_{i}(\delta_{ik} - y_{k})
 $$
@@ -120,7 +120,7 @@ $$
 
 ### Derivative of $E$ with respect to slice $k$ of the tensor layer $V^{[k]}$
 
-#### Top node ($node_n$):
+#### Top node $(node_n)$:
 $$
 			\begin{split}
 				\delta^s = W_s{^T}(y - t) \otimes (1 - x{_n}^2) \\
@@ -129,7 +129,7 @@ $$
 				\bigg[  \begin{array}{c} x_{n-1}^l \\ x^{r}{_{n-1}} \end{array} \bigg]^T \\
 			\end{split}
 $$
-#### Left child node ($node_{n-1}$):}
+#### Left child node $(node_{n-1})$:
 $$
 			\begin{split}
 				\delta_{n} = \delta^{s,n} \\
