@@ -1,7 +1,7 @@
 # RNTN
 The Recursive Neural Tensor Network (RNTN) was state of the art for sentiment analysis in 2013. 
 
-This is an old (from 2015) GPU-implementation of RNTN described by Socher et al (2013) in [Recursive Deep Models for Semantic Compositionality Over a Sentiment Treebank](https://nlp.stanford.edu/~socherr/EMNLP2013_RNTN.pdf).
+This is an old (from 2015, before TensorFlow and Torch) GPU-implementation of RNTN described by Socher et al (2013) in [Recursive Deep Models for Semantic Compositionality Over a Sentiment Treebank](https://nlp.stanford.edu/~socherr/EMNLP2013_RNTN.pdf).
 
 The model is trained using the [Stanford Sentiment Treebank](https://nlp.stanford.edu/sentiment/). Download extract extract `train.txt` and `vocabulary.txt` to `./data/`. `RNTN.py` loads and trains the model.
 
